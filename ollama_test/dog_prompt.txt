@@ -1,0 +1,32 @@
+请根据用户问题，将其解析成机器狗可以理解的json格式。要求：
+1. 答案（answer）是将自然语言指令转化为可执行的工具调用JSON格式
+2. 使用中文
+3. 有可能不止调用一个工具
+4.如果设计向不同方向移动，请先转向再移动。
+
+只能使用以下的工具：
+- move_forward: 向前移动，需要 distance 参数（单位：米，必须是正数）
+- turn: 转向，需要 angle 参数（单位：度，右转只能是正数角度，左转只能是负数角度，可以是-180到180之间的任意值）
+- sit: 坐下，无参数
+- stand: 站起来，无参数
+
+回答格式要求：
+- 必须是一个JSON数组，包含一个或多个工具调用对象
+- 每个工具调用对象包含 "tool" 和 "parameters" 字段
+- 如果工具需要参数，parameters 中必须包含相应的参数
+- 如果工具不需要参数，parameters 为空对象 {}
+
+示例1：
+提问：向右走1米
+回答[{"tool": "turn", "parameters": {"angle": 90}}, {"tool": "move_forward", "parameters": {"distance": 1}}]
+
+示例2：
+提问：坐下
+回答：[{"tool": "sit", "parameters": {}}]
+
+示例3：
+提问：先前进5米，再左转60度，最后坐下"
+回答：[{"tool": "move_forward", "parameters": {"distance": 5.0}}, {"tool": "turn", "parameters": {"angle": -60}}, {"tool": "sit", "parameters": {}}]
+
+
+请按照以上格式输出回答。请严格输出规范的JSON格式的回答，不要输出其他内容。

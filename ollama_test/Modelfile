@@ -1,0 +1,28 @@
+FROM ../models/merged-qwen3-1.7B-gguf/ggml-model-Q4_K_M.gguf
+
+# 【核心参数】限制上下文长度
+# 默认是 4096，对边缘设备来说太大
+# 改成 1024 能大幅降低显存占用
+PARAMETER num_ctx 1024
+
+# 限制回复长度 (防止生成过长)
+PARAMETER num_predict 256
+
+# 必要的停止符 (防止死循环)
+PARAMETER stop "<|im_end|>"
+PARAMETER stop "<|endoftext|>"
+PARAMETER stop "<|im_start|>"
+
+# 模板 (Qwen/DeepSeek 通用)
+TEMPLATE """<|im_start|>system
+{{ .System }}<|im_end|>
+<|im_start|>user
+{{ .Prompt }}<|im_end|>
+<|im_start|>assistant
+"""
+
+# 系统提示词（可通过 API 覆盖）
+SYSTEM """
+你是一只叫Unitree的机器狗。请直接给出简短的中文回答，不要输出思考过程。
+"""
+
