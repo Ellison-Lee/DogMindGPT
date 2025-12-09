@@ -396,12 +396,32 @@ def plot_latency_curve(results: Dict, output_dir: str):
     plt.close()
 
 def plot_throughput(results: Dict, output_dir: str):
-    """绘制吞吐量图"""
+    """绘制吞吐量图（去除极端值）"""
     if not results or 'throughputs' not in results or not results['throughputs']:
         print("没有吞吐量数据可绘制")
         return
     
     throughputs = results['throughputs']
+    
+    # 使用 IQR 方法去除极端值
+    if len(throughputs) > 4:  # 需要足够的数据点才能计算 IQR
+        q1 = np.percentile(throughputs, 25)
+        q3 = np.percentile(throughputs, 75)
+        iqr = q3 - q1
+        lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
+        
+        # 过滤极端值
+        filtered_throughputs = [t for t in throughputs if lower_bound <= t <= upper_bound]
+        outliers_count = len(throughputs) - len(filtered_throughputs)
+        
+        if outliers_count > 0:
+            print(f"已过滤 {outliers_count} 个极端值（IQR方法）")
+            throughputs = filtered_throughputs
+    
+    if not throughputs:
+        print("过滤后没有数据可绘制")
+        return
     
     fig, axes = plt.subplots(1, 2, figsize=(15, 5))
     fig.patch.set_facecolor('white')
