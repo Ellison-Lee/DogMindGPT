@@ -1,4 +1,4 @@
-# NLP-Final: Qwen3-1.7B 金融领域 LoRA 微调项目
+# NLP-Final: Qwen3-1.7B LoRA 微调项目
 
 本项目基于 Qwen3-1.7B 模型，使用 LoRA（Low-Rank Adaptation）技术在进行微调，并实现了模型量化、性能评估和语音交互等功能，用以部署至Unitree 机器狗上，通过人类语音控制其动作。
 
